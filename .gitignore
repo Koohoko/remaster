@@ -1,20 +1,10 @@
-# IntelliJ stuff
-/.idea
-/reMaster.iml
-/out
+# Build artifacts
+/build/
+/build-beast/
+/beast-source/
+/beast-archive/
+/dist/
 
-# Binaries
-/dist
-/build
-/build-lib/
-
-# Generated example files
-/examples/*.traj
-/examples/*.log
-/examples/*.trees
-
-# MacOS cruft
+# IDE / OS
 .DS_Store
-
-# Other cruft
-.Rhistory
+*.swp
