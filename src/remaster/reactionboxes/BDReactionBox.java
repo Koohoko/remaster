@@ -149,6 +149,41 @@ public abstract class BDReactionBox {
     }
 
     /**
+     * Maximum number of times the reaction can fire given current reactant counts.
+     * Returns +Infinity if there are no reactants.
+     */
+    public double getMaxReactCount() {
+        if (reaction.reactants.isEmpty())
+            return Double.POSITIVE_INFINITY;
+        double N = Double.POSITIVE_INFINITY;
+        for (ReactElement el : reaction.reactants.elementSet()) {
+            double available = Math.floor(state.get(el) / reaction.reactants.count(el));
+            N = Math.min(N, available);
+        }
+        return N;
+    }
+
+    /**
+     * Detect migration reactions of the form V_donor -> V_recipient (optionally + M_donor_to_recipient).
+     */
+    public boolean isMigrationReaction() {
+        if (reaction.reactants.elementSet().size() != 1)
+            return false;
+        ReactElement reactant = reaction.reactants.elementSet().iterator().next();
+        if (!reactant.name.startsWith("V_"))
+            return false;
+
+        boolean hasDifferentVProduct = false;
+        for (ReactElement product : reaction.products.elementSet()) {
+            if (product.name.startsWith("V_") && !product.name.equals(reactant.name)) {
+                hasDifferentVProduct = true;
+                break;
+            }
+        }
+        return hasDifferentVProduct;
+    }
+
+    /**
      * Hashmap used to track how many of each type of product have already been "seen"
      * when incrementing the lineage state.
      *
