@@ -39,7 +39,7 @@ public class PunctualBDReactionBox extends BDReactionBox {
     public double getMaxReactCount() {
         double N = Double.POSITIVE_INFINITY;
         for (ReactElement el : reaction.reactants.elementSet())
-            N = Math.min(Math.floor(state.get(el)/reaction.reactants.count(el)), N);
+            N = Math.min(Math.floor(state.get(el) / reaction.reactants.count(el)), N);
 
         return N;
     }
@@ -62,11 +62,15 @@ public class PunctualBDReactionBox extends BDReactionBox {
                 n = N;
             } else {
                 if (stochastic) {
-                    n =  nextBinomial(N, p);
+                    n = nextBinomial(N, p);
                 } else
-                    n = p*N;
+                    n = p * N;
             }
         }
+
+        double maxN = reaction.getNextMaxN();
+        if (maxN >= 0.0 && n > maxN)
+            n = maxN;
 
         incrementState(state, n);
         return n;

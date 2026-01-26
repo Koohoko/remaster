@@ -35,8 +35,8 @@ import java.util.*;
 public class CoalescentTrajectory extends AbstractTrajectory {
 
     public Input<List<PopulationFunction.Abstract>> popFuncInput = new Input<>("population",
-        "Population represented by a beast PopulationFunction object",
-        new ArrayList<>());
+            "Population represented by a beast PopulationFunction object",
+            new ArrayList<>());
 
     public Input<Double> maxTrajLogAgeInput = new Input<>("maxTrajLogAge",
             "Maximum age for logging population dynamics.");
@@ -104,18 +104,22 @@ public class CoalescentTrajectory extends AbstractTrajectory {
                     leavesToCome = true;
             }
 
+            if (!punctualReactionsByChangeTime.isEmpty())
+                leavesToCome = true;
+
             if (!punctualReactionsByChangeTime.isEmpty()
                     && nextReactionTime > punctualReactionsByChangeTime.get(0).getReactionTime()) {
                 t = punctualReactionsByChangeTime.get(0).getReactionTime();
                 PunctualCoalescentReactionBox punctualReaction = punctualReactionsByChangeTime.get(0);
                 punctualReaction.applyReaction(lineages, lineageFactory);
-                punctualReactionsByChangeTime.sort(Comparator.comparingDouble(PunctualCoalescentReactionBox::getReactionTime));
+                punctualReactionsByChangeTime
+                        .sort(Comparator.comparingDouble(PunctualCoalescentReactionBox::getReactionTime));
                 continue;
             }
 
             if (nextReaction == null
                     || (lineages.values().stream().mapToInt(List::size).sum() == 1)
-                    && !leavesToCome)
+                            && !leavesToCome)
                 break;
 
             // Select and implement reaction
@@ -125,7 +129,7 @@ public class CoalescentTrajectory extends AbstractTrajectory {
         }
 
         List<Lineage> rootLineages = new ArrayList<>();
-        lineages.forEach((el,lineageList) -> rootLineages.addAll(lineageList));
+        lineages.forEach((el, lineageList) -> rootLineages.addAll(lineageList));
 
         if (rootLineages.size() != 1)
             throw new IllegalStateException("Coalescent simulation terminated " +
@@ -146,8 +150,8 @@ public class CoalescentTrajectory extends AbstractTrajectory {
         double sampleCount = loggingGridSizeInput.get();
 
         boolean isFirst = true;
-        for (int i = 0; i< loggingGridSizeInput.get(); i++) {
-            double t = i*maxAge/(sampleCount - 1);
+        for (int i = 0; i < loggingGridSizeInput.get(); i++) {
+            double t = i * maxAge / (sampleCount - 1);
 
             for (PopulationFunction.Abstract pop : popFuncInput.get()) {
                 if (isFirst)

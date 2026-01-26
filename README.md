@@ -1,3 +1,29 @@
+TISC Modifications (v2.7.4.TISC)
+--------------------------------
+
+This fork includes custom changes for the TISC project:
+
+1. **Hybrid tau-leaping for BD trajectories**: `StochasticTrajectory` supports
+   `tauLeapingInterval` (fixed step) and `tauLeapingThreshold` (micro-scale V
+   threshold). Below the threshold, exact SSA is used; above it, tau-leaping
+   is used for T/I/V while **migration remains exact** to avoid systematic
+   clade-bias from bursty migration.
+
+2. **Multiplicity-aware tree reconstruction**: aggregated tau-leap events are
+   translated to lineage events using inclusion probabilities, with correct
+   handling of `p=1` sampling.
+
+3. **Memory-lean event storage**: `StochasticTrajectory` stores events in
+   primitive arrays (time/reaction index/multiplicity) instead of allocating
+   one object per event, reducing heap overhead without changing results.
+
+4. **Trajectory logging interval**: `logInterval` on `StochasticTrajectory`
+   and `CoalescentTrajectory` controls logging frequency (default 0.1).
+
+5. **Probability sampling cap**: `maxN` on `PunctualReaction` enforces
+   `n_sampled = min(binomial(N, p), maxN)` for probability-based sampling.
+
+
 ReMASTER
 ========
 

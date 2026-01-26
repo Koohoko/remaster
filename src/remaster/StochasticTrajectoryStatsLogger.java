@@ -60,7 +60,7 @@ public class StochasticTrajectoryStatsLogger extends BEASTObject implements Logg
     public void log(long sample, PrintStream out) {
 
 
-        out.print(traj.events.size() + "\t");
+        out.print(traj.getEventCount() + "\t");
 
         traj.state.resetToFinal();
         for (String pop : popNames) {

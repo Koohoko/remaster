@@ -24,6 +24,51 @@ import beast.base.util.GammaFunction;
 import beast.base.util.Randomizer;
 
 public class Util {
+    private static boolean haveNextGaussian = false;
+    private static double nextGaussian = 0.0;
+
+    /**
+     * Box-Muller Gaussian sampler using Randomizer.nextDouble().
+     */
+    public static double nextGaussian() {
+        if (haveNextGaussian) {
+            haveNextGaussian = false;
+            return nextGaussian;
+        }
+        double u1 = Randomizer.nextDouble();
+        double u2 = Randomizer.nextDouble();
+        double r = Math.sqrt(-2.0 * Math.log(u1));
+        double theta = 2.0 * Math.PI * u2;
+        nextGaussian = r * Math.sin(theta);
+        haveNextGaussian = true;
+        return r * Math.cos(theta);
+    }
+
+    /**
+     * Draw sample from a Poisson distribution with mean lambda.
+     * Uses Knuth for small lambda, normal approximation for large lambda.
+     *
+     * @param lambda mean of Poisson distribution
+     * @return number of events
+     */
+    public static double nextPoisson(double lambda) {
+        if (lambda <= 0.0)
+            return 0.0;
+        if (lambda < 30.0) {
+            double L = Math.exp(-lambda);
+            int k = 0;
+            double p = 1.0;
+            do {
+                k += 1;
+                p *= Randomizer.nextDouble();
+            } while (p > L);
+            return k - 1;
+        }
+        double x = lambda + Math.sqrt(lambda) * nextGaussian();
+        if (x < 0.0)
+            return 0.0;
+        return Math.round(x);
+    }
 
     /**
      * Log binomial coefficient allowing floating point arguments.
