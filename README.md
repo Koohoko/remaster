@@ -20,10 +20,6 @@ This fork includes custom changes for the TISC project:
 4. **Trajectory logging interval**: `logInterval` on `StochasticTrajectory`
    and `CoalescentTrajectory` controls logging frequency (default 0.1).
 
-5. **Probability sampling cap**: `maxN` on `PunctualReaction` enforces
-   `n_sampled = min(binomial(N, p), maxN)` for probability-based sampling.
-
-
 ReMASTER
 ========
 
