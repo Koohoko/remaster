@@ -41,11 +41,7 @@ public class PunctualReaction extends AbstractReaction {
             "Times at which punctual reactions occur.",
             Input.Validate.REQUIRED);
 
-    public Input<Function> maxNInput = new Input<>("maxN",
-            "Maximum number of reactions to fire (cap) when using p-sampling.",
-            Input.Validate.OPTIONAL);
-
-    double[] ps, ns, times, maxNs;
+    double[] ps, ns, times;
 
     @Override
     public void initAndValidate() {
@@ -72,13 +68,6 @@ public class PunctualReaction extends AbstractReaction {
             int nDim = nInput.get().getDimension();
             for (int i : indices)
                 ns[i] = nInput.get().getArrayValue(i % nDim);
-        }
-
-        if (maxNInput.get() != null) {
-            maxNs = new double[times.length];
-            int maxNDim = maxNInput.get().getDimension();
-            for (int i : indices)
-                maxNs[i] = maxNInput.get().getArrayValue(i % maxNDim);
         }
 
         super.initAndValidate();
@@ -121,7 +110,4 @@ public class PunctualReaction extends AbstractReaction {
         return ns[currentInterval];
     }
 
-    public double getNextMaxN() {
-        return (maxNs != null) ? maxNs[currentInterval] : -1.0;
-    }
 }

@@ -68,10 +68,6 @@ public class PunctualBDReactionBox extends BDReactionBox {
             }
         }
 
-        double maxN = reaction.getNextMaxN();
-        if (maxN >= 0.0 && n > maxN)
-            n = maxN;
-
         incrementState(state, n);
         return n;
     }
