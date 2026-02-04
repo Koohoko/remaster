@@ -20,6 +20,8 @@ TIPB-side diagnostics (generated per replicate oracle run):
 
 Project write-up:
 - `docs/plans/2026-02-04-remaster_treeprior_alignment.md`
+- Beginner-friendly explainer (propensity / waiting-time sampling / when it triggers):
+  - `docs/plans/2026-02-04-remaster_waiting_time_sampler_bug_explainer.md`
 
 ## How To Rebuild (vendored reference copy)
 The reference source lives under `paper_validation/deps/remaster/` but is generally not committed as a full dependency snapshot.
@@ -47,4 +49,3 @@ and (optional) the source jar:
 - `remaster.v2.7.4.TISC.src.jar`
 
 Keep a backup of the original jars before replacing.
-
