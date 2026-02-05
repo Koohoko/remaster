@@ -1,7 +1,7 @@
-TISC Modifications (v2.7.4.TISC)
+TIPB Modifications (v2.7.4.TIPB)
 --------------------------------
 
-This fork includes custom changes for the TISC project:
+This fork includes custom changes for the TIPB project:
 
 1. **Hybrid tau-leaping for BD trajectories**: `StochasticTrajectory` supports
    `tauLeapingInterval` (fixed step) and `tauLeapingThreshold` (micro-scale V
