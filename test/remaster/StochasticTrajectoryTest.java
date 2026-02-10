@@ -29,18 +29,6 @@ import java.util.stream.IntStream;
 
 public class StochasticTrajectoryTest {
 
-    BDTrajectoryState getStateAtTime(StochasticTrajectory traj, double t) {
-        traj.state.resetToInitial();
-
-        for (BDTrajectoryEvent event : traj.events) {
-            if (event.time>t)
-                break;
-            event.reactionBox.incrementState(traj.state, event.multiplicity);
-        }
-
-        return traj.state;
-    }
-
     @Test
     public void linearBDtest() {
         Randomizer.setSeed(53);
@@ -62,8 +50,7 @@ public class StochasticTrajectoryTest {
                             "reaction", death,
                             "maxTime", "5");
                     return traj;})
-                .map(traj -> getStateAtTime(traj, 5))
-                .mapToDouble(state -> state.get("X", 0))
+                .mapToDouble(traj -> traj.state.get("X", 0))
                 .toArray();
 
         Assert.assertEquals(12.18249, DiscreteStatistics.mean(finalPopSizes), 0.1);
