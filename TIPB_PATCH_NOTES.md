@@ -1,17 +1,19 @@
 # ReMASTER Patch Notes (TIPB)
-Date: 2026-02-04
+Date: 2026-02-10
 
-This repo uses **ReMASTER** (as a BEAST2 package) for SC simulation. We found a mismatch between simulated typed trees and the hazard model assumed by **TISCTreePrior**.
+This repo uses **ReMASTER** (as a BEAST2 package) for SC simulation. We found a mismatch between simulated typed trees and the hazard model assumed by the **TIPB tree prior**.
 
 ## Summary
 Root cause: `remaster.reactionboxes.ContinuousCoalescentReactionBox.getNextReactionTime()` uses an invalid update when sampling waiting times for **piecewise-constant** `Reaction` propensities. The previous implementation updates a uniform `u` by subtracting interval CDF mass, which can drive `u <= 0` and produce NaN reaction times. In practice, NaN times bias/suppress reactions (notably migration), yielding unrealistic typed trees (often at the tip-type lower bound).
 
-Fix: replace the sampler with a correct inverse-CDF implementation:
-- sample `w ~ Exp(1)` once (`w = -log(u)`)
-- walk intervals and subtract hazards `w -= prop * Δt` until `w` is within the current interval.
+Fix (upstream): use the author-maintained correction from `cb6e235` (released in ReMASTER `v2.7.4`), which keeps the original algorithm structure and correctly rescales the uniform variate when crossing a rate-change interval:
+- compute `pNoFire = exp(-prop * Δt)` for the current interval,
+- update `u = u / pNoFire` before advancing intervals,
+- continue sampling with the new interval rate.
 
-The patch is recorded as:
-- `patches/0001-fix-piecewise-reaction-waiting-time-sampler.patch`
+Reconciliation status in this TIPB fork:
+- local wait-time rewrite commits were dropped in favor of upstream's `cb6e235` implementation,
+- this fork now tracks upstream for `ContinuousCoalescentReactionBox` and its upstream regression test.
 
 ## Evidence / Diagnostics
 TIPB-side diagnostics (generated per replicate oracle run):
